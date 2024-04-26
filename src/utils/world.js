@@ -5,7 +5,7 @@ import { createRenderer } from "./renderer.js";
 import { Loop } from "./loop.js";
 import { Resizer } from "./resizer.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { AnimationMixer, CircleGeometry, MeshStandardMaterial, Mesh,} from 'three';
+import { AnimationMixer, CircleGeometry, MeshStandardMaterial, Mesh,Raycaster, Vector2} from 'three';
 
 // These variables are module-scoped: we cannot access them
 // from outside the module.
@@ -19,11 +19,36 @@ class World {
   constructor(container) {
     // Instances of camera, scene, and renderer
 
+
+    this.onPointerMove = ( event) => {
+      const raycaster = new Raycaster();
+      const pointer = new Vector2();
+  
+      // calculate pointer position in normalized device coordinates
+      // (-1 to +1) for both components
+    
+      pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+      pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+  
+  
+      raycaster.setFromCamera( pointer, camera );
+      const intersects = raycaster.intersectObjects( scene.children );
+
+      console.log(loop)
+      console.log(intersects[0])
+
+      const obj = intersects[0].object.name
+
+      if (obj === "cube_6"){
+        loop.play_animation("saludo_1", true)
+      }
+  
+    }
+
     scene = createScene("pink");
     
     renderer = createRenderer();
-    const {camera, controls} = createCamera(renderer);
-
+    const camera = createCamera(renderer);
     const loader = new GLTFLoader();
     loader.load(
       "lux_wolf.gltf",
@@ -77,7 +102,7 @@ class World {
     scene.add(light);
 
 
-      
+
 
     const resizer = new Resizer(container, camera, renderer);
     resizer.onResize = () => {
@@ -86,22 +111,23 @@ class World {
     
 
   }
-  render() {
-    // Draw a single frame
 
-    renderer.render(scene, camera);
-  }
+
+
+
   // Animation handlers
   start() {
+
     loop.start();
+    window.addEventListener( 'click', this.onPointerMove );
   }
   stop() {
     loop.stop();
   }
 
-  play(animation) {
+  play(animation, finish) {
 
-    loop.play_animation(animation)
+    loop.play_animation(animation, finish)
 
   }
 

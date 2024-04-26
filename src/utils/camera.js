@@ -18,7 +18,7 @@ const controls = new OrbitControls( camera, renderer.domElement );
   
  };
  
- return {camera, controls};
+ return camera;
 }
  
 export { createCamera };

@@ -1,5 +1,5 @@
 
-import { Clock, AnimationClip } from 'three';
+import { Clock, AnimationClip, LoopOnce} from 'three';
 import gsap from 'gsap'
 
 const clock = new Clock();
@@ -33,7 +33,7 @@ class Loop {
     this.renderer.setAnimationLoop(null);
   }
 
-  play_animation(name) {
+  play_animation(name,finish) {
     const clip = AnimationClip.findByName(this.animations, name);
     // name: idle
 
@@ -42,13 +42,26 @@ class Loop {
     if (clip) {
       const action = this.animationMixer.clipAction(clip);
 
+      if (finish){
+
+      
+        action.setLoop(LoopOnce, 1);
+  
+      }else{
+
+        action.clampWhenFinished = false;
+
+
+      }
       if ( !action.isRunning() ){
     
         action.play();
         this.animationActions[name] = action; 
+        action.reset();
       }else{
         action.stop();
         this.animationActions[name] = action; 
+        action.reset();
       }
 
 
