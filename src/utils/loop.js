@@ -42,6 +42,8 @@ class Loop {
     if (clip) {
       const action = this.animationMixer.clipAction(clip);
 
+      console.log(action)
+
       if (finish){
 
       

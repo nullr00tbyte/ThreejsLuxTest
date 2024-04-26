@@ -34,12 +34,12 @@ class World {
       raycaster.setFromCamera( pointer, camera );
       const intersects = raycaster.intersectObjects( scene.children );
 
-      console.log(loop)
-      console.log(intersects[0])
 
-      const obj = intersects[0].object.name
+      console.log(intersects[1])
 
-      if (obj === "cube_6"){
+      const obj = intersects[1].object.name
+
+      if (obj === "cube_2"){
         loop.play_animation("saludo_1", true)
       }
   
